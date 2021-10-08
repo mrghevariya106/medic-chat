@@ -8,10 +8,12 @@ const initialize = {
   fullName: "",
   userName: "",
   password: "",
-  avtarURL: "",
+  avatarURL: "",
   confirmPassword: "",
   phoneNumber: "",
 };
+
+const cookies = new Cookies();
 
 const Auth = () => {
   const [form, setForm] = useState(initialize);
@@ -19,12 +21,30 @@ const Auth = () => {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    // console.log(form);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    const { fullName, userName, password, avatarURL, phoneNumber } = form;
+
+    const URL = "http://localhost:5000/auth";
+
+    const { data: { token, userId, hashedPassword }} = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
+      userName,password,avatarURL,phoneNumber,fullName
+    });
+
+    cookies.set("userName", userName);
+    cookies.set("userId", userId);
+    cookies.set("fullName", fullName);
+    cookies.set("token", token);
+
+    if (isSignUp) {
+      cookies.set("phoneNumber", phoneNumber);
+      cookies.set("avatarURL", avatarURL);
+      cookies.set("hashedPassword", hashedPassword);
+    }
+
+    window.location.reload();
   };
 
   const switchMode = () => {
@@ -73,9 +93,9 @@ const Auth = () => {
             )}
             {isSignUp && (
               <div className="auth__form-container_fields-content_input">
-                <lable htmlFor="avtarURL">Avatar URL</lable>
+                <lable htmlFor="avatarURL">Avatar URL</lable>
                 <input
-                  name="avtarURL"
+                  name="avatarURL"
                   type="text"
                   placeholder="Avatar URL"
                   onChange={handleChange}
@@ -106,7 +126,7 @@ const Auth = () => {
               </div>
             )}
             <div className="auth__form-container_fields-content_button">
-                <button>{isSignUp ? 'Sign Up' : 'Sign in'}</button>
+              <button>{isSignUp ? "Sign Up" : "Sign in"}</button>
             </div>
           </form>
           <div className="auth__form-container_fields-account">
