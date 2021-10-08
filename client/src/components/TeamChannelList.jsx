@@ -14,7 +14,7 @@ const TeamChannelList = ({ children, error = false, loading, type }) => {
     ) : null;
   }
 
-  if (error) {
+  if (loading) {
     return (
       <div className="team-channel-list">
         <p className="team-channel-list__message loading">
