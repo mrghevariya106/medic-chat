@@ -38,8 +38,14 @@ const customeChannelMessageingFilter = (channels) => {
   return channels.filter((channel) => channel.type === "messaging");
 };
 
-const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEditing }) => {
-  const {client} = useChatContext();
+const ChannelListContent = ({
+  isCreating,
+  setIsCreating,
+  setCreateType,
+  setIsEditing,
+  setToggleContainer,
+}) => {
+  const { client } = useChatContext();
   const logout = () => {
     cookies.remove("userName");
     cookies.remove("userId");
@@ -52,7 +58,7 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
     window.location.reload();
   };
 
-  const filters = { members: { $in: [client.userID]}};
+  const filters = { members: { $in: [client.userID] } };
   return (
     <>
       <SlideBar logout={logout} />
@@ -70,10 +76,17 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
               setIsCreating={setIsCreating}
               setCreateType={setCreateType}
               setIsEditing={setIsEditing}
+              setToggleContainer={setToggleContainer}
             />
           )}
           Preview={(previewProps) => (
-            <TeamChannelPreview {...previewProps} type="team" />
+            <TeamChannelPreview
+              {...previewProps}
+              setToggleContainer={setToggleContainer}
+              setIsCreating={setIsCreating}
+              setIsEditing={setIsEditing}
+              type="team"
+            />
           )}
         />
         <ChannelList
@@ -87,10 +100,17 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
               setIsCreating={setIsCreating}
               setCreateType={setCreateType}
               setIsEditing={setIsEditing}
+              setToggleContainer={setToggleContainer}
             />
           )}
           Preview={(previewProps) => (
-            <TeamChannelPreview {...previewProps} type="messaging" />
+            <TeamChannelPreview
+              {...previewProps}
+              setToggleContainer={setToggleContainer}
+              setIsCreating={setIsCreating}
+              setIsEditing={setIsEditing}
+              type="messaging"
+            />
           )}
         />
       </div>
@@ -98,8 +118,12 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
   );
 };
 
-const ChannelListContainer = ({ setCreateType, setIsCreating, setIsEditing }) =>  {
-const [toggleContainer, setToggleContainer] = useState(false);
+const ChannelListContainer = ({
+  setCreateType,
+  setIsCreating,
+  setIsEditing,
+}) => {
+  const [toggleContainer, setToggleContainer] = useState(false);
 
   return (
     <>
